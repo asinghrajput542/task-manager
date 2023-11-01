@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Todo = () => {
   const [showDelete, setshowDelete] = useState(true);
@@ -6,19 +6,26 @@ const Todo = () => {
   const [isEditItem, setisEditItem] = useState(null);
   const [showList, setshowList] = useState(true);
   const [deleteMessage, setdeleteMessage] = useState(false);
-  const [deleteMessagesuccess, setdeleteMessagesuccess] = useState(false);
   const [inputTitle, setinputTitle] = useState("");
   const [inputDesc, setinputDesc] = useState("");
-  const [items, setitems] = useState([
-    {
-      id: "001",
-      name: "Default Task",
-      desc: "Default Description",
-      status: "todo",
-    },
-  ]);
-  const [searchTerm, setSearchTerm] = useState(""); // Add search state
-  const [filterStatus, setFilterStatus] = useState("All"); //status drop down
+  const [items, setitems] = useState([]);
+  const [status, setStatus] = useState("To Do");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:9000/task");
+      const data = await response.json();
+      setitems(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   // Function to handle filter change
   const handleFilterChange = (e) => {
@@ -34,6 +41,12 @@ const Todo = () => {
   const handleInput = (e) => {
     setinputTitle(e.target.value);
   };
+  // HANDLING STATUS FIELDS
+  const handleStatus = (e) => {
+    const { value } = e.target;
+    setStatus(value);
+  };
+
   const handleInputdesc = (e) => {
     setinputDesc(e.target.value);
   };
@@ -49,8 +62,18 @@ const Todo = () => {
     } else if (inputTitle && !toggleSubmit) {
       setitems(
         items.map((elem) => {
-          if (elem.id === isEditItem) {
-            return { ...elem, name: inputTitle, desc: inputDesc };
+          if (elem?._id === isEditItem) {
+            updateTask(elem?._id, {
+              title: inputTitle,
+              description: inputDesc,
+              status: status,
+            });
+            return {
+              ...elem,
+              title: inputTitle,
+              description: inputDesc,
+              status: status,
+            };
           }
           return elem;
         })
@@ -62,32 +85,92 @@ const Todo = () => {
       setshowDelete(true);
     } else {
       const allinputTitle = {
-        id: new Date().getTime().toString(),
-        name: inputTitle,
-        desc: inputDesc,
+        title: inputTitle,
+        description: inputDesc,
+        status: status,
       };
-      setitems([allinputTitle, ...items]);
-      setinputTitle("");
-      setinputDesc("");
+      createNewTask(allinputTitle);
     }
   };
   //   SUBMITTING FORM
+  const createNewTask = async (task) => {
+    try {
+      const response = await fetch("http://localhost:9000/task/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+      });
+
+      if (response.ok) {
+        // Request was successful (status code 200)
+        const result = await response.json();
+        setitems([result, ...items]);
+        setinputTitle("");
+        setinputDesc("");
+        console.log("New task created:", result);
+      } else {
+        // Request failed, handle the error
+        console.error("Failed to create a new task");
+      }
+    } catch (error) {
+      // Handle any network or request-related errors
+      console.error("Error creating a new task:", error);
+    }
+  };
+
+  //UPDATE TASK
+  const updateTask = async (id, updatedData) => {
+    try {
+      const response = await fetch("http://localhost:9000/task/" + id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (response.ok) {
+        // Request was successful (status code 200)
+        const result = await response.json();
+        console.log("Task updated:", result);
+      } else {
+        // Request failed, handle the error
+        console.error("Failed to update the task");
+      }
+    } catch (error) {
+      // Handle any network or request-related errors
+      console.error("Error updating the task:", error);
+    }
+  };
 
   //   DELETE
-  const handleDelete = (index) => {
-    console.log(index);
-    const updatedItems = items.filter((elem) => {
-      return index !== elem.id;
-    });
+  const handleDelete = (id, index) => {
     setdeleteMessage(true);
-
     setTimeout(() => {
-      setitems(updatedItems);
+      deleteDataById(id, index);
       setdeleteMessage(false);
-    }, 2000);
-    setdeleteMessagesuccess(false);
+    }, 1000);
   };
   //   DELETE
+  const deleteDataById = async (id, index) => {
+    const response = await fetch("http://localhost:9000/task/" + id, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          const taskList = [...items];
+          taskList.splice(index, 1);
+          setitems(taskList);
+        } else {
+          alert("Error deleting document.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error :", err);
+      });
+  };
 
   //   EDIT
   const handleEdit = (id) => {
@@ -96,55 +179,66 @@ const Todo = () => {
 
     settoggleSubmit(false);
     let newEditItem = items.find((elem) => {
-      return elem.id === id;
+      return elem?._id === id;
     });
-    setinputTitle(newEditItem.name);
-    setinputDesc(newEditItem.desc);
+    setinputTitle(newEditItem?.title);
+    setinputDesc(newEditItem?.description);
 
     setisEditItem(id);
-    console.log(newEditItem);
-  };
-  //   EDIT
-
-  // ADD NEW TASK
-  const handleAdd = () => {
-    //   alert("hello")
-    setshowList(true);
   };
 
   // Function to render the list of tasks
   const renderTasks = () => {
     // Apply filtering based on the selected status
-    const filteredTasks =
+    let filteredTasks;
+    function getStatusTextColor(status) {
+      switch (status) {
+        case "Done":
+          return "text-green-500";
+        case "In Progress":
+          return "text-orange-500";
+        default:
+          return "text-red-500";
+      }
+    }
+
+    filteredTasks =
       filterStatus === "All"
         ? items
-        : items.filter((item) => item.status === filterStatus);
-
+        : items.filter(
+            (item) => item?.status.toLowerCase() === filterStatus.toLowerCase()
+          );
     return filteredTasks
       .filter((elem) =>
-        elem.name.toLowerCase().includes(searchTerm.toLowerCase())
+        elem?.title.toLowerCase().includes(searchTerm.toLowerCase())
       )
-      .map((elem) => (
+      .map((elem, index) => (
         <div
           className="border shadow mb-3 bg-gray-50 rounded p-2"
-          key={elem.id}
+          key={elem?._id}
         >
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold text-xl">{elem.name}</p>
-              <p className="text-gray-500 text-sm">{elem.desc}</p>
+              <p className="font-semibold text-xl">{elem?.title}</p>
+              <div className="flex gap-2">
+                <p className="text-gray-500 text-sm">{elem?.description}</p>
+
+                <p className={`text-sm ${getStatusTextColor(elem?.status)}`}>
+                  {elem?.status}
+                </p>
+              </div>
             </div>
             <div className="flex gap-2">
               <button
                 className="text-white bg-blue-400 my-2 w-20 sm:w-[50%] p-2 rounded-lg"
-                onClick={() => handleEdit(elem.id)}
+                onClick={() => handleEdit(elem?._id)}
               >
                 Edit
               </button>
               {showDelete ? (
                 <button
                   className="text-white bg-red-400 my-2 w-20 sm:w-[50%] p-2 rounded-lg"
-                  onClick={() => handleDelete(elem.id)}
+                  onClick={() => handleDelete(elem?._id, index)}
                 >
                   Delete
                 </button>
@@ -205,6 +299,7 @@ const Todo = () => {
                 <select
                   name="status"
                   className="w-full sm:w-2/5 my-1 p-2 border-2 rounded-xl"
+                  onChange={handleStatus}
                 >
                   <option value="To Do">To Do</option>
                   <option value="In Progress">In Progress</option>
