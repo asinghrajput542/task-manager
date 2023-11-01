@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 
 const Todo = () => {
-  const [showDelete, setshowDelete] = useState(true);
-  const [toggleSubmit, settoggleSubmit] = useState(true);
-  const [isEditItem, setisEditItem] = useState(null);
-  const [showList, setshowList] = useState(true);
-  const [deleteMessage, setdeleteMessage] = useState(false);
-  const [deleteMessagesuccess, setdeleteMessagesuccess] = useState(false);
-  const [inputTitle, setinputTitle] = useState("");
-  const [inputDesc, setinputDesc] = useState("");
+  // State variables for various aspects of the component
+  const [showDelete, setshowDelete] = useState(true); // Show delete button
+  const [toggleSubmit, settoggleSubmit] = useState(true); // Toggle between Add and Edit modes
+  const [isEditItem, setisEditItem] = useState(null); // Item being edited
+  const [showList, setshowList] = useState(true); // Show the list of tasks
+  const [deleteMessage, setdeleteMessage] = useState(false); // Delete message
+  const [deleteMessagesuccess, setdeleteMessagesuccess] = useState(false); // Delete success message
+  const [inputTitle, setinputTitle] = useState(""); // Task title input
+  const [inputDesc, setinputDesc] = useState(""); // Task description input
   const [items, setitems] = useState([
     {
       id: "001",
@@ -16,9 +17,9 @@ const Todo = () => {
       desc: "Default Description",
       status: "todo",
     },
-  ]);
-  const [searchTerm, setSearchTerm] = useState(""); // Add search state
-  const [filterStatus, setFilterStatus] = useState("All"); //status drop down
+  ]); // List of tasks
+  const [searchTerm, setSearchTerm] = useState(""); // Search term
+  const [filterStatus, setFilterStatus] = useState("All"); // Filter by task status
 
   // Function to handle filter change
   const handleFilterChange = (e) => {
@@ -30,16 +31,15 @@ const Todo = () => {
     setSearchTerm(e.target.value);
   };
 
-  //   HANDLING INPUT FIELDS
+  // Handling input fields
   const handleInput = (e) => {
     setinputTitle(e.target.value);
   };
   const handleInputdesc = (e) => {
     setinputDesc(e.target.value);
   };
-  //   HANDLING INPUT FIELDS
 
-  //   SUBMITTING FORM
+  // Submitting the form
   const handleSubmit = (e) => {
     setshowList(true);
 
@@ -47,6 +47,7 @@ const Todo = () => {
     if (!inputTitle || !inputDesc) {
       alert("fill data");
     } else if (inputTitle && !toggleSubmit) {
+      // Edit existing task
       setitems(
         items.map((elem) => {
           if (elem.id === isEditItem) {
@@ -61,6 +62,7 @@ const Todo = () => {
       settoggleSubmit(true);
       setshowDelete(true);
     } else {
+      // Add a new task
       const allinputTitle = {
         id: new Date().getTime().toString(),
         name: inputTitle,
@@ -71,9 +73,8 @@ const Todo = () => {
       setinputDesc("");
     }
   };
-  //   SUBMITTING FORM
 
-  //   DELETE
+  // Delete a task
   const handleDelete = (index) => {
     console.log(index);
     const updatedItems = items.filter((elem) => {
@@ -87,9 +88,8 @@ const Todo = () => {
     }, 2000);
     setdeleteMessagesuccess(false);
   };
-  //   DELETE
 
-  //   EDIT
+  // Edit a task
   const handleEdit = (id) => {
     setshowList(false);
     setshowDelete(false);
@@ -104,11 +104,9 @@ const Todo = () => {
     setisEditItem(id);
     console.log(newEditItem);
   };
-  //   EDIT
 
-  // ADD NEW TASK
+  // Add new task
   const handleAdd = () => {
-    //   alert("hello")
     setshowList(true);
   };
 
@@ -157,7 +155,6 @@ const Todo = () => {
       ));
   };
 
-  // ADD NEW TASK
   return (
     <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 py-6">
       <div className="border rounded shadow p-3 mb-5 bg-white">
