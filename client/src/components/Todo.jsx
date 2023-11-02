@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { createNewTask, deleteDataById, fetchData, updateTask } from "../api";
 
+export const API_BASE_URL = "http://localhost:9000/task";
 const Todo = () => {
   // State variables for managing task data and form inputs
   const [showDelete, setShowDelete] = useState(true); // Toggle delete button visibility
@@ -16,23 +18,17 @@ const Todo = () => {
 
   // Fetch initial data on component mount
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  // Fetch tasks from the server
-  const fetchData = async () => {
-    try {
-      const response = await fetch("http://localhost:9000/task");
-      if (response.ok) {
-        const data = await response.json();
-        setItems(data);
-      } else {
-        console.error("Error fetching data:", response.status);
+    const fetchDataAndSetItems = async () => {
+      try {
+        setItems(await fetchData());
+      } catch (error) {
+        // Handle any errors that occur during data fetching
+        console.error("Error fetching data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+    };
+
+    fetchDataAndSetItems();
+  }, []);
 
   // Event handler for filter status change
   const handleFilterChange = (e) => {
@@ -60,7 +56,7 @@ const Todo = () => {
   };
 
   // Event handler for form submission (Create or Update task)
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Validate form inputs
     if (!inputTitle || !inputDesc) {
@@ -88,81 +84,28 @@ const Todo = () => {
       );
     } else {
       // Create new task
-      createNewTask({
+      const result = await createNewTask({
         title: inputTitle,
         description: inputDesc,
         status: status,
       });
+      setItems([result, ...items]);
     }
     // Reset form inputs and buttons after submission
     resetForm();
-  };
-
-  // Function to create a new task on the server
-  const createNewTask = async (task) => {
-    try {
-      const response = await fetch("http://localhost:9000/task/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        setItems([result, ...items]);
-      } else {
-        console.error("Failed to create a new task");
-      }
-    } catch (error) {
-      console.error("Error creating a new task:", error);
-    }
-  };
-
-  // Function to update an existing task on the server
-  const updateTask = async (id, updatedData) => {
-    try {
-      const response = await fetch("http://localhost:9000/task/" + id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Task updated:", result);
-      } else {
-        console.error("Failed to update the task");
-      }
-    } catch (error) {
-      console.error("Error updating the task:", error);
-    }
   };
 
   // Event handler for task deletion
   const handleDelete = (id, index) => {
     setDeleteMessage(true);
     setTimeout(() => {
-      deleteDataById(id, index);
-      setDeleteMessage(false);
+      deleteDataById(id).then(() => {
+        const taskList = [...items];
+        taskList.splice(index, 1);
+        setItems(taskList);
+        setDeleteMessage(false);
+      });
     }, 1000);
-  };
-
-  // Function to delete a task by ID on the server
-  const deleteDataById = async (id, index) => {
-    const response = await fetch("http://localhost:9000/task/" + id, {
-      method: "DELETE",
-    });
-    if (response.ok) {
-      const taskList = [...items];
-      taskList.splice(index, 1);
-      setItems(taskList);
-    } else {
-      alert("Error deleting document.");
-    }
   };
 
   // Event handler for editing a task
@@ -202,7 +145,7 @@ const Todo = () => {
 
     return filteredTasks
       .filter((elem) =>
-        elem.title.toLowerCase().includes(searchTerm.toLowerCase())
+        elem?.title?.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .map((elem, index) => (
         <div
@@ -291,11 +234,12 @@ const Todo = () => {
                 />
               </div>
               <div className="m-2 flex flex-col w-[30%]">
-                <label className="my-1 font-semibold" htmlFor="description">
+                <label htmlFor="status" className="my-1 font-semibold">
                   Status :
                 </label>
                 <select
                   name="status"
+                  id="status"
                   className="w-full sm:w-2/5 my-1 p-2 border-2 rounded-xl"
                   onChange={handleStatus}
                 >
@@ -324,10 +268,14 @@ const Todo = () => {
               value={searchTerm}
             />
             <div className="flex items-center flex-col sm:flex-row">
-              <label className="text-gray-600 text-sm sm:mr-2">
+              <label
+                htmlFor="statusFilter"
+                className="text-gray-600 text-sm sm:mr-2"
+              >
                 Filter by Status:
               </label>
               <select
+                id="statusFilter"
                 value={filterStatus}
                 onChange={handleFilterChange}
                 className="w-full sm:w-auto bg-white border rounded-lg p-2"
