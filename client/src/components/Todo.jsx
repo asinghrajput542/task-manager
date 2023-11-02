@@ -1,66 +1,73 @@
 import React, { useEffect, useState } from "react";
 
 const Todo = () => {
-  const [showDelete, setshowDelete] = useState(true);
-  const [toggleSubmit, settoggleSubmit] = useState(true);
-  const [isEditItem, setisEditItem] = useState(null);
-  const [showList, setshowList] = useState(true);
-  const [deleteMessage, setdeleteMessage] = useState(false);
-  const [inputTitle, setinputTitle] = useState("");
-  const [inputDesc, setinputDesc] = useState("");
-  const [items, setitems] = useState([]);
-  const [status, setStatus] = useState("To Do");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("All");
+  // State variables for managing task data and form inputs
+  const [showDelete, setShowDelete] = useState(true); // Toggle delete button visibility
+  const [toggleSubmit, setToggleSubmit] = useState(true); // Toggle submit button functionality for edit and save
+  const [isEditItem, setIsEditItem] = useState(null); // Store ID of the item being edited
+  const [showList, setShowList] = useState(true); // Toggle task list visibility
+  const [deleteMessage, setDeleteMessage] = useState(false); // Display delete success message
+  const [inputTitle, setInputTitle] = useState(""); // Input for task title
+  const [inputDesc, setInputDesc] = useState(""); // Input for task description
+  const [items, setItems] = useState([]); // Array to store tasks
+  const [status, setStatus] = useState("To Do"); // Task status (To Do, In Progress, Done)
+  const [searchTerm, setSearchTerm] = useState(""); // Input for search term
+  const [filterStatus, setFilterStatus] = useState("All"); // Filter tasks by status (All, To Do, In Progress, Done)
 
+  // Fetch initial data on component mount
   useEffect(() => {
     fetchData();
   }, []);
 
+  // Fetch tasks from the server
   const fetchData = async () => {
     try {
       const response = await fetch("http://localhost:9000/task");
-      const data = await response.json();
-      setitems(data);
+      if (response.ok) {
+        const data = await response.json();
+        setItems(data);
+      } else {
+        console.error("Error fetching data:", response.status);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  // Function to handle filter change
+  // Event handler for filter status change
   const handleFilterChange = (e) => {
     setFilterStatus(e.target.value);
   };
 
-  // Handle searching
+  // Event handler for search input change
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  //   HANDLING INPUT FIELDS
+  // Event handler for task title input change
   const handleInput = (e) => {
-    setinputTitle(e.target.value);
+    setInputTitle(e.target.value);
   };
-  // HANDLING STATUS FIELDS
+
+  // Event handler for task status input change
   const handleStatus = (e) => {
-    const { value } = e.target;
-    setStatus(value);
+    setStatus(e.target.value);
   };
 
-  const handleInputdesc = (e) => {
-    setinputDesc(e.target.value);
+  // Event handler for task description input change
+  const handleInputDesc = (e) => {
+    setInputDesc(e.target.value);
   };
-  //   HANDLING INPUT FIELDS
 
-  //   SUBMITTING FORM
+  // Event handler for form submission (Create or Update task)
   const handleSubmit = (e) => {
-    setshowList(true);
-
     e.preventDefault();
+    // Validate form inputs
     if (!inputTitle || !inputDesc) {
-      alert("fill data");
+      alert("Please fill in all fields");
     } else if (inputTitle && !toggleSubmit) {
-      setitems(
+      // Update existing task
+      setItems(
         items.map((elem) => {
           if (elem?._id === isEditItem) {
             updateTask(elem?._id, {
@@ -78,21 +85,12 @@ const Todo = () => {
           return elem;
         })
       );
-
-      setinputTitle("");
-      setinputDesc("");
-      settoggleSubmit(true);
-      setshowDelete(true);
-    } else {
-      const allinputTitle = {
-        title: inputTitle,
-        description: inputDesc,
-        status: status,
-      };
-      createNewTask(allinputTitle);
     }
+    // Reset form inputs and buttons after submission
+    resetForm();
   };
-  //   SUBMITTING FORM
+
+  // Function to create a new task on the server
   const createNewTask = async (task) => {
     try {
       const response = await fetch("http://localhost:9000/task/", {
@@ -104,23 +102,17 @@ const Todo = () => {
       });
 
       if (response.ok) {
-        // Request was successful (status code 200)
         const result = await response.json();
-        setitems([result, ...items]);
-        setinputTitle("");
-        setinputDesc("");
-        console.log("New task created:", result);
+        setItems([result, ...items]);
       } else {
-        // Request failed, handle the error
         console.error("Failed to create a new task");
       }
     } catch (error) {
-      // Handle any network or request-related errors
       console.error("Error creating a new task:", error);
     }
   };
 
-  //UPDATE TASK
+  // Function to update an existing task on the server
   const updateTask = async (id, updatedData) => {
     try {
       const response = await fetch("http://localhost:9000/task/" + id, {
@@ -132,66 +124,56 @@ const Todo = () => {
       });
 
       if (response.ok) {
-        // Request was successful (status code 200)
         const result = await response.json();
         console.log("Task updated:", result);
       } else {
-        // Request failed, handle the error
         console.error("Failed to update the task");
       }
     } catch (error) {
-      // Handle any network or request-related errors
       console.error("Error updating the task:", error);
     }
   };
 
-  //   DELETE
+  // Event handler for task deletion
   const handleDelete = (id, index) => {
-    setdeleteMessage(true);
+    setDeleteMessage(true);
     setTimeout(() => {
       deleteDataById(id, index);
-      setdeleteMessage(false);
+      setDeleteMessage(false);
     }, 1000);
   };
-  //   DELETE
+
+  // Function to delete a task by ID on the server
   const deleteDataById = async (id, index) => {
     const response = await fetch("http://localhost:9000/task/" + id, {
       method: "DELETE",
-    })
-      .then((response) => {
-        if (response.ok) {
-          const taskList = [...items];
-          taskList.splice(index, 1);
-          setitems(taskList);
-        } else {
-          alert("Error deleting document.");
-        }
-      })
-      .catch((err) => {
-        console.error("Error :", err);
-      });
-  };
-
-  //   EDIT
-  const handleEdit = (id) => {
-    setshowList(false);
-    setshowDelete(false);
-
-    settoggleSubmit(false);
-    let newEditItem = items.find((elem) => {
-      return elem?._id === id;
     });
-    setinputTitle(newEditItem?.title);
-    setinputDesc(newEditItem?.description);
-
-    setisEditItem(id);
+    if (response.ok) {
+      const taskList = [...items];
+      taskList.splice(index, 1);
+      setItems(taskList);
+    } else {
+      alert("Error deleting document.");
+    }
   };
 
-  // Function to render the list of tasks
+  // Event handler for editing a task
+  const handleEdit = (id) => {
+    setShowList(false);
+    setShowDelete(false);
+    setToggleSubmit(false);
+
+    let newEditItem = items.find((elem) => elem._id === id);
+    setInputTitle(newEditItem.title);
+    setInputDesc(newEditItem.description);
+    setIsEditItem(id);
+  };
+
+  // Function to render the filtered and searched task list
   const renderTasks = () => {
-    // Apply filtering based on the selected status
     let filteredTasks;
-    function getStatusTextColor(status) {
+    // Function to determine text color based on task status
+    const getStatusTextColor = (status) => {
       switch (status) {
         case "Done":
           return "text-green-500";
@@ -200,45 +182,46 @@ const Todo = () => {
         default:
           return "text-red-500";
       }
-    }
+    };
 
+    // Apply filters and search term on tasks
     filteredTasks =
       filterStatus === "All"
         ? items
         : items.filter(
-            (item) => item?.status.toLowerCase() === filterStatus.toLowerCase()
+            (item) => item.status.toLowerCase() === filterStatus.toLowerCase()
           );
+
     return filteredTasks
       .filter((elem) =>
-        elem?.title.toLowerCase().includes(searchTerm.toLowerCase())
+        elem.title.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .map((elem, index) => (
         <div
           className="border shadow mb-3 bg-gray-50 rounded p-2"
-          key={elem?._id}
+          key={elem._id}
         >
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold text-xl">{elem?.title}</p>
+              <p className="font-semibold text-xl">{elem.title}</p>
               <div className="flex gap-2">
-                <p className="text-gray-500 text-sm">{elem?.description}</p>
-
-                <p className={`text-sm ${getStatusTextColor(elem?.status)}`}>
-                  {elem?.status}
+                <p className="text-gray-500 text-sm">{elem.description}</p>
+                <p className={`text-sm ${getStatusTextColor(elem.status)}`}>
+                  {elem.status}
                 </p>
               </div>
             </div>
             <div className="flex gap-2">
               <button
                 className="text-white bg-blue-400 my-2 w-20 sm:w-[50%] p-2 rounded-lg"
-                onClick={() => handleEdit(elem?._id)}
+                onClick={() => handleEdit(elem._id)}
               >
                 Edit
               </button>
               {showDelete ? (
                 <button
                   className="text-white bg-red-400 my-2 w-20 sm:w-[50%] p-2 rounded-lg"
-                  onClick={() => handleDelete(elem?._id, index)}
+                  onClick={() => handleDelete(elem._id, index)}
                 >
                   Delete
                 </button>
@@ -251,7 +234,15 @@ const Todo = () => {
       ));
   };
 
-  // ADD NEW TASK
+  // Function to reset the form inputs and buttons
+  const resetForm = () => {
+    setShowList(true);
+    setInputTitle("");
+    setInputDesc("");
+    setToggleSubmit(true);
+    setShowDelete(true);
+  };
+
   return (
     <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 py-6">
       <div className="border rounded shadow p-3 mb-5 bg-white">
@@ -260,8 +251,7 @@ const Todo = () => {
             {toggleSubmit ? "Add Task" : "Edit Task"}
           </p>
         </div>
-
-        <div className="flex justify-center ">
+        <div className="flex justify-center">
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="flex flex-col sm:flex-row">
               <div className="m-2 w-[40%] flex flex-col">
@@ -272,7 +262,7 @@ const Todo = () => {
                   type="text"
                   name="title"
                   id="title"
-                  placeholder="title"
+                  placeholder="Title"
                   className="w-full  my-1 p-2 border-2 rounded-xl"
                   onChange={handleInput}
                   value={inputTitle}
@@ -288,7 +278,7 @@ const Todo = () => {
                   id="description"
                   placeholder="Description"
                   className="w-full my-1 p-2 border-2 rounded-xl"
-                  onChange={handleInputdesc}
+                  onChange={handleInputDesc}
                   value={inputDesc}
                 />
               </div>
@@ -307,26 +297,17 @@ const Todo = () => {
                 </select>
               </div>
             </div>
-
             <div>
-              {toggleSubmit ? (
-                <button className="text-white bg-blue-400 my-2 w-full sm:w-1/5 p-2 rounded-xl">
-                  Save
-                </button>
-              ) : (
-                <button className="text-white bg-blue-400 my-2 w-full sm:w-1/5 p-2 rounded-xl">
-                  Update
-                </button>
-              )}
+              <button className="text-white bg-blue-400 my-2 w-full sm:w-1/5 p-2 rounded-xl">
+                {toggleSubmit ? "Save" : "Update"}
+              </button>
             </div>
           </form>
         </div>
       </div>
-
       {showList ? (
         <div className="py-2">
           <div className="mb-4 flex gap-3">
-            {/* Add search input field */}
             <input
               type="text"
               placeholder="Search by title"
