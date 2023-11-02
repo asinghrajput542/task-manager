@@ -67,6 +67,7 @@ const Todo = () => {
       alert("Please fill in all fields");
     } else if (inputTitle && !toggleSubmit) {
       // Update existing task
+      // Update existing task
       setItems(
         items.map((elem) => {
           if (elem?._id === isEditItem) {
@@ -85,6 +86,13 @@ const Todo = () => {
           return elem;
         })
       );
+    } else {
+      // Create new task
+      createNewTask({
+        title: inputTitle,
+        description: inputDesc,
+        status: status,
+      });
     }
     // Reset form inputs and buttons after submission
     resetForm();

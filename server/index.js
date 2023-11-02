@@ -1,3 +1,4 @@
+// Import required modules and functions
 import connection from "./database/db.js";
 import express from "express";
 import {
@@ -9,21 +10,30 @@ import {
 import bodyParser from "body-parser";
 import cors from "cors";
 
+// Initialize Express app
 const app = express();
+
+// Connect to the database
 connection();
+
+// Define the port to run the server on
 const port = 9000;
-app.use(bodyParser.json());
 
-app.use(cors());
+// Configure middleware
+app.use(bodyParser.json()); // Parse incoming JSON data
+app.use(cors()); // Enable Cross-Origin Resource Sharing
 
+// Start the Express server
 app.listen(port, () => {
   console.log(`Express server is running on port ${port}`);
 });
 
+// Default route
 app.get("/", (req, res) => {
   res.send("Server is live");
 });
 
+// Retrieve a list of tasks
 app.get("/task", async (req, res) => {
   try {
     const documents = await getDocumentList();
@@ -36,6 +46,7 @@ app.get("/task", async (req, res) => {
   }
 });
 
+// Create a new task
 app.post("/task", async (req, res) => {
   try {
     return res.status(201).json(await insertTask(req.body));
@@ -64,6 +75,7 @@ app.delete("/task/:id", async (req, res) => {
   }
 });
 
+// Update a task by ID
 app.put("/task/:id", async (req, res) => {
   try {
     return res

@@ -1,24 +1,24 @@
 import Document from "../schema/schema.js";
 
+// Update a document by ID
 export const updateDocumentById = async (id, newData) => {
   try {
-    console.log("id ", id, "newData ", newData);
+    console.log("Updating document with ID:", id);
+    console.log("New data:", newData);
 
-    const updatedDocument = await Document.findByIdAndUpdate(
-      id,
-      {
-        title: newData?.title,
-      },
-      { description: newData?.description },
-      { status: newData?.status },
-
-      { modificationDate: new Date() }
-    );
+    // Use Mongoose's 'findByIdAndUpdate' to update the document
+    const updatedDocument = await Document.findByIdAndUpdate(id, {
+      title: newData?.title,
+      description: newData?.description,
+      status: newData?.status,
+      modificationDate: new Date(),
+    });
 
     if (!updatedDocument) {
       throw new Error("Document not found");
     }
 
+    // Return the updated document
     return await Document.findById(id);
   } catch (error) {
     console.error("Error updating document:", error);
@@ -26,16 +26,40 @@ export const updateDocumentById = async (id, newData) => {
   }
 };
 
+// Retrieve a list of documents
 export const getDocumentList = async () => {
-  return await Document.find()
-    .sort({ modificationDate: -1 })
-    .select("_id modificationDate creationDate title description status");
+  try {
+    console.log("Retrieving document list");
+
+    return await Document.find()
+      .sort({ modificationDate: -1 }) // Sort documents by modification date in descending order
+      .select("_id modificationDate creationDate title description status");
+  } catch (error) {
+    console.error("Error retrieving document list:", error);
+    throw error;
+  }
 };
 
+// Insert a new task document
 export const insertTask = async (data) => {
-  return await new Document(data).save();
+  try {
+    console.log("Inserting a new task document");
+
+    return await new Document(data).save();
+  } catch (error) {
+    console.error("Error inserting a new task document:", error);
+    throw error;
+  }
 };
 
+// Delete a task by ID
 export const deleteTask = async (id) => {
-  return await Document.findByIdAndDelete(id);
+  try {
+    console.log("Deleting task document with ID:", id);
+
+    return await Document.findByIdAndDelete(id);
+  } catch (error) {
+    console.error("Error deleting task document:", error);
+    throw error;
+  }
 };
