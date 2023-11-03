@@ -2,9 +2,6 @@
 
 <h1><strong>Task</strong>Manager App - Frontend</h1>
 
-<h2>
-<!--   <a href="https://play-tube-ui.vercel.app/">Live URL</a> -->
-</h2>
 </div>
 
 
@@ -31,10 +28,6 @@ The React Task Manager App is a user-friendly web application designed to help y
 
 
 
-<!--## Deployments
-![vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)-->
-
-
 ## Getting Started 🚀
 
 To use this project, follow these steps:
@@ -50,7 +43,3 @@ To use this project, follow these steps:
 3. To delete a task, click the "Delete" button associated with the task you want to remove.
 4. Use the search bar to filter tasks by title. Enter keywords or phrases, and the app will display matching tasks.
 5. Toggle between task statuses to view tasks with specific statuses (e.g., "To Do," "In Progress," "Done").
-
-
-
-
