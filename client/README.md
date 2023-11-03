@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1><strong>Task</strong> - Manager</h1>
+<h1><strong>Task</strong>Manager App - Frontend</h1>
 
 <h2>
 <!--   <a href="https://play-tube-ui.vercel.app/">Live URL</a> -->
