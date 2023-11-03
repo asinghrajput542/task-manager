@@ -16,4 +16,8 @@ const connection = async (user = "admin", password = "admin") => {
   }
 };
 
+export function disconnectFromDatabase() {
+  console.log("Database disconnected");
+  mongoose.disconnect();
+}
 export default connection;

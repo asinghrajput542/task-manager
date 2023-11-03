@@ -9,9 +9,10 @@ import {
 } from "./controller/app-controller.js";
 import bodyParser from "body-parser";
 import cors from "cors";
+import Document from "./schema/schema.js";
 
 // Initialize Express app
-const app = express();
+export const app = express();
 
 // Connect to the database
 connection();
@@ -39,7 +40,7 @@ app.get("/task", async (req, res) => {
     const documents = await getDocumentList();
     res.status(200).json(documents);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching documents:", error);
     res
       .status(500)
       .json({ error: "An error occurred while fetching documents." });
@@ -78,11 +79,10 @@ app.delete("/task/:id", async (req, res) => {
 // Update a task by ID
 app.put("/task/:id", async (req, res) => {
   try {
-    return res
-      .status(200)
-      .json(await updateDocumentById(req.params.id, req.body));
+    const result = await updateDocumentById(req.params.id, req.body);
+    return res.status(200).json(await Document.findById(req.params.id));
   } catch (error) {
     console.error("Error updating task:", error);
-    res.status(500).json({ error: "Failed to update task" });
+    res.status(404).json({ error: "Failed to update task" });
   }
 });

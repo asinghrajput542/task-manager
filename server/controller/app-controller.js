@@ -5,19 +5,16 @@ export const updateDocumentById = async (id, newData) => {
   try {
     console.log("Updating document with ID:", id);
     console.log("New data:", newData);
-
-    // Use Mongoose's 'findByIdAndUpdate' to update the document
-    const updatedDocument = await Document.findByIdAndUpdate(id, {
+    const result = await Document.findByIdAndUpdate(id, {
       title: newData?.title,
       description: newData?.description,
       status: newData?.status,
       modificationDate: new Date(),
     });
 
-    if (!updatedDocument) {
-      throw new Error("Document not found");
+    if (!result) {
+      throw Error("Data not found by given id");
     }
-
     // Return the updated document
     return await Document.findById(id);
   } catch (error) {
