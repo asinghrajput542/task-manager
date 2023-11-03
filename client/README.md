@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+<div align="center">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1><strong>Task</strong> - Manager</h1>
 
-## Available Scripts
+<h2>
+<!--   <a href="https://play-tube-ui.vercel.app/">Live URL</a> -->
+</h2>
+</div>
 
-In the project directory, you can run:
 
-### `npm start`
+The React Task Manager App is a user-friendly web application designed to help you efficiently manage your tasks. With this app, you can easily create new tasks, edit their details, and delete tasks as needed, providing you with a streamlined task management experience.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features 📋
 
-### `npm run build`
+⚡️ Create New Tasks: Add new tasks to your to-do list, providing a clear and organized way to keep track of your work or personal tasks.\
+⚡️ Edit Task Details: Easily modify the details of existing tasks, enabling you to update task title, descriptions or status whenever necessary.\
+⚡️ Delete Tasks: Remove completed or outdated tasks from your list to maintain a clutter-free and up-to-date task manager.\
+⚡️ Filter Tasks by Title: Quickly find tasks by entering keywords or phrases in the search bar, which filters tasks based on their titles.\
+⚡️ Filter Tasks by Status: Toggle between task statuses (e.g., "To Do," "In Progress," "Done") to view tasks based on their current status.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Frameworks & Libraries used 📚
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![TailwindCSS](https://camo.githubusercontent.com/e9b080a6541e5355827ea91b6a0302cbbc54af4705b0c6b0f1561a0957ced2fb/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f5461696c77696e645f4353532d3338423241433f7374796c653d666f722d7468652d6261646765266c6f676f3d7461696c77696e642d637373266c6f676f436f6c6f723d7768697465)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+<!--## Deployments
+![vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)-->
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Getting Started 🚀
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+To use this project, follow these steps:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Clone the repository.
+2. Install the dependencies using `npm install`.
+3. Start the development server using `npm start`.
+4. Open your web browser and navigate to `http://localhost:3000`.
 
-## Learn More
+## Usage 🍕
+1. Enter a task description in the input field and click "Add Task" to create a new task.
+2. To edit a task, click the "Edit" button next to the task you wish to modify. Make your changes and click "Update" to confirm.
+3. To delete a task, click the "Delete" button associated with the task you want to remove.
+4. Use the search bar to filter tasks by title. Enter keywords or phrases, and the app will display matching tasks.
+5. Toggle between task statuses to view tasks with specific statuses (e.g., "To Do," "In Progress," "Done").
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
