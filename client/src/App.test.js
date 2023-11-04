@@ -1,7 +1,8 @@
 import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Todo from "./components/Todo";
 import * as api from "./api";
+import { Router } from "react-router-dom";
 
 jest.mock("./api"); // Mock the entire api module
 
@@ -20,7 +21,13 @@ describe("Todo component", () => {
     // Render the Todo component with initial items
 
     api.fetchData.mockResolvedValue(initialItems);
-    render(<Todo />);
+    render(
+      <Router
+        location={{ state: { name: "Test User", email: "test@example.com" } }}
+      >
+        <Todo />,
+      </Router>
+    );
 
     // Wait for the component to finish rendering
     await waitFor(() => {
@@ -60,6 +67,7 @@ describe("Todo component", () => {
 
     // Assert that the createNewTask function is called with the expected data
     expect(api.createNewTask).toHaveBeenCalledWith({
+      author: "test@example.com",
       title: "New Task",
       description: "Description for the new task",
       status: "To Do",

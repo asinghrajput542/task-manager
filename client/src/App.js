@@ -1,14 +1,12 @@
-import Header from "./components/Header";
-import Todo from "./components/Todo";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import routes from "./routes";
 
 // The main App component
 function App() {
   return (
     <div className="App">
-      {/* Render the Header component at the top of the app */}
-      <Header />
-      {/* Render the Todo component for task management */}
-      <Todo />
+      {/* RouterProvider wraps the application and provides the router context */}
+      <RouterProvider router={createBrowserRouter(routes)} />
     </div>
   );
 }

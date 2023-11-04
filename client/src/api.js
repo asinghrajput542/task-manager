@@ -3,9 +3,9 @@
 const API_BASE_URL = "http://localhost:9000"; // Replace with your API base URL
 
 // Fetch tasks from the server
-export const fetchData = async () => {
+export const fetchData = async (author) => {
   try {
-    const response = await fetch("http://localhost:9000/task");
+    const response = await fetch(`http://localhost:9000/task?author=${author}`);
     if (response.ok) {
       const data = await response.json();
       return data;

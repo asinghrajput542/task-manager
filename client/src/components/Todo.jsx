@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { createNewTask, deleteDataById, fetchData, updateTask } from "../api";
+import Header from "./Header";
+import { useLocation } from "react-router-dom";
 
-export const API_BASE_URL = "http://localhost:9000/task";
 const Todo = () => {
+  const { name, email } = useLocation().state;
+
   // State variables for managing task data and form inputs
   const [showDelete, setShowDelete] = useState(true); // Toggle delete button visibility
   const [toggleSubmit, setToggleSubmit] = useState(true); // Toggle submit button functionality for edit and save
@@ -20,7 +23,7 @@ const Todo = () => {
   useEffect(() => {
     const fetchDataAndSetItems = async () => {
       try {
-        setItems(await fetchData());
+        setItems(await fetchData(email));
       } catch (error) {
         // Handle any errors that occur during data fetching
         console.error("Error fetching data:", error);
@@ -88,6 +91,7 @@ const Todo = () => {
         title: inputTitle,
         description: inputDesc,
         status: status,
+        author: email,
       });
       setItems([result, ...items]);
     }
@@ -195,109 +199,112 @@ const Todo = () => {
   };
 
   return (
-    <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 py-6">
-      <div className="border rounded shadow p-3 mb-5 bg-white">
-        <div className="flex justify-center">
-          <p className="font-extrabold text-2xl">
-            {toggleSubmit ? "Add Task" : "Edit Task"}
-          </p>
+    <>
+      <Header isHome={true} name={name} email={email} />
+      <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 py-6">
+        <div className="border rounded shadow p-3 mb-5 bg-white">
+          <div className="flex justify-center">
+            <p className="font-extrabold text-2xl">
+              {toggleSubmit ? "Add Task" : "Edit Task"}
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <form className="w-full" onSubmit={handleSubmit}>
+              <div className="flex flex-col sm:flex-row">
+                <div className="m-2 w-[40%] flex flex-col">
+                  <label htmlFor="title" className="my-1 font-semibold">
+                    Title :
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    id="title"
+                    placeholder="Title"
+                    className="w-full  my-1 p-2 border-2 rounded-xl"
+                    onChange={handleInput}
+                    value={inputTitle}
+                  />
+                </div>
+                <div className="m-2 flex flex-col w-[40%]">
+                  <label className="my-1 font-semibold" htmlFor="description">
+                    Description :
+                  </label>
+                  <input
+                    type="text"
+                    name="description"
+                    id="description"
+                    placeholder="Description"
+                    className="w-full my-1 p-2 border-2 rounded-xl"
+                    onChange={handleInputDesc}
+                    value={inputDesc}
+                  />
+                </div>
+                <div className="m-2 flex flex-col w-[30%]">
+                  <label htmlFor="status" className="my-1 font-semibold">
+                    Status :
+                  </label>
+                  <select
+                    name="status"
+                    id="status"
+                    className="w-full sm:w-2/5 my-1 p-2 border-2 rounded-xl"
+                    onChange={handleStatus}
+                  >
+                    <option value="To Do">To Do</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Done">Done</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <button className="text-white bg-blue-400 my-2 w-full sm:w-1/5 p-2 rounded-xl">
+                  {toggleSubmit ? "Save" : "Update"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="flex justify-center">
-          <form className="w-full" onSubmit={handleSubmit}>
-            <div className="flex flex-col sm:flex-row">
-              <div className="m-2 w-[40%] flex flex-col">
-                <label htmlFor="title" className="my-1 font-semibold">
-                  Title :
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  id="title"
-                  placeholder="Title"
-                  className="w-full  my-1 p-2 border-2 rounded-xl"
-                  onChange={handleInput}
-                  value={inputTitle}
-                />
-              </div>
-              <div className="m-2 flex flex-col w-[40%]">
-                <label className="my-1 font-semibold" htmlFor="description">
-                  Description :
-                </label>
-                <input
-                  type="text"
-                  name="description"
-                  id="description"
-                  placeholder="Description"
-                  className="w-full my-1 p-2 border-2 rounded-xl"
-                  onChange={handleInputDesc}
-                  value={inputDesc}
-                />
-              </div>
-              <div className="m-2 flex flex-col w-[30%]">
-                <label htmlFor="status" className="my-1 font-semibold">
-                  Status :
+        {showList ? (
+          <div className="py-2">
+            <div className="mb-4 flex gap-3">
+              <input
+                type="text"
+                placeholder="Search by title"
+                className="w-full sm:w-2/5 my-1 p-2 border-2 rounded-xl"
+                onChange={handleSearch}
+                value={searchTerm}
+              />
+              <div className="flex items-center flex-col sm:flex-row">
+                <label
+                  htmlFor="statusFilter"
+                  className="text-gray-600 text-sm sm:mr-2"
+                >
+                  Filter by Status:
                 </label>
                 <select
-                  name="status"
-                  id="status"
-                  className="w-full sm:w-2/5 my-1 p-2 border-2 rounded-xl"
-                  onChange={handleStatus}
+                  id="statusFilter"
+                  value={filterStatus}
+                  onChange={handleFilterChange}
+                  className="w-full sm:w-auto bg-white border rounded-lg p-2"
                 >
+                  <option value="All">All</option>
                   <option value="To Do">To Do</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Done">Done</option>
                 </select>
               </div>
             </div>
-            <div>
-              <button className="text-white bg-blue-400 my-2 w-full sm:w-1/5 p-2 rounded-xl">
-                {toggleSubmit ? "Save" : "Update"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      {showList ? (
-        <div className="py-2">
-          <div className="mb-4 flex gap-3">
-            <input
-              type="text"
-              placeholder="Search by title"
-              className="w-full sm:w-2/5 my-1 p-2 border-2 rounded-xl"
-              onChange={handleSearch}
-              value={searchTerm}
-            />
-            <div className="flex items-center flex-col sm:flex-row">
-              <label
-                htmlFor="statusFilter"
-                className="text-gray-600 text-sm sm:mr-2"
-              >
-                Filter by Status:
-              </label>
-              <select
-                id="statusFilter"
-                value={filterStatus}
-                onChange={handleFilterChange}
-                className="w-full sm:w-auto bg-white border rounded-lg p-2"
-              >
-                <option value="All">All</option>
-                <option value="To Do">To Do</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Done">Done</option>
-              </select>
-            </div>
+            {deleteMessage ? (
+              <p className="text-center">Item Deleted Successfully</p>
+            ) : (
+              ""
+            )}
+            {renderTasks()}
           </div>
-          {deleteMessage ? (
-            <p className="text-center">Item Deleted Successfully</p>
-          ) : (
-            ""
-          )}
-          {renderTasks()}
-        </div>
-      ) : (
-        ""
-      )}
-    </div>
+        ) : (
+          ""
+        )}
+      </div>
+    </>
   );
 };
 
