@@ -48,9 +48,28 @@ To use this project, follow these steps:
 3. Start the development server using `npm start`.
 4. Open your web browser and navigate to `http://localhost:3000`.
 
-## Usage 🍕
-1. Enter a task description in the input field and click "Add Task" to create a new task.
-2. To edit a task, click the "Edit" button next to the task you wish to modify. Make your changes and click "Update" to confirm.
-3. To delete a task, click the "Delete" button associated with the task you want to remove.
-4. Use the search bar to filter tasks by title. Enter keywords or phrases, and the app will display matching tasks.
-5. Toggle between task statuses to view tasks with specific statuses (e.g., "To Do," "In Progress," "Done").
+Usage 🍕
+1. `Signup Process:`
+If you're a new user, start by signing up for an account. Click the "Sign up".
+Provide your name, email and create a secure password.
+Click "Signup" to create your account.
+
+2. `Creating a New Task:`
+Once you're logged in, enter a task description in the input field.
+Click "Add Task" to create a new task.
+
+3. `Editing a Task:`
+To edit a task, click the "Edit" button next to the task you wish to modify.
+Make your changes and click "Update" to confirm.
+
+4. `Deleting a Task:`
+If you want to remove a task, click the "Delete" button associated with the task you wish to delete.
+
+5. `Searching for Tasks:`
+Use the search bar to filter tasks by title. Enter keywords or phrases, and the app will display matching tasks.
+
+6. `Filtering by Task Status:`
+Toggle between task statuses to view tasks with specific statuses (e.g., "To Do," "In Progress," "Done").
+
+7. `Logging Out:`
+To log out of your account and secure your session, click the User icon then "Logout" button. This ensures the safety of your tasks and account.
