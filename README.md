@@ -17,7 +17,8 @@
 ⚡️ User-friendly web interface for task management.
 
 ### Demo 📽️
-<iframe width="560" height="315" src="https://www.loom.com/share/83b13904b6064e2f849028c10bbaeddc?sid=12362e36-821a-4eb2-94b8-0bcdc58d7949" frameborder="0" allowfullscreen></iframe>
+<!--<iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>-->
+https://www.loom.com/share/83b13904b6064e2f849028c10bbaeddc?sid=12362e36-821a-4eb2-94b8-0bcdc58d7949
 
 
 
