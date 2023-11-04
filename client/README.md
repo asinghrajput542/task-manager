@@ -11,6 +11,16 @@ The React Task Manager App is a user-friendly web application designed to help y
 
 ---
 
+## User Authentication 🔐
+
+The app now features user authentication using Firebase. You can create an account using your email and password, and then log in to manage your tasks securely.
+
+### Firebase Authentication Features:
+- User Registration: Create an account with your email and password.
+- User Login: Log in with your registered email and password.
+- User Logout: Log out of your account to secure your tasks.
+
+
 ## Features 📋
 
 ⚡️ Create New Tasks: Add new tasks to your to-do list, providing a clear and organized way to keep track of your work or personal tasks.\
@@ -24,6 +34,7 @@ The React Task Manager App is a user-friendly web application designed to help y
 ![TailwindCSS](https://camo.githubusercontent.com/e9b080a6541e5355827ea91b6a0302cbbc54af4705b0c6b0f1561a0957ced2fb/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f5461696c77696e645f4353532d3338423241433f7374796c653d666f722d7468652d6261646765266c6f676f3d7461696c77696e642d637373266c6f676f436f6c6f723d7768697465)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
 ![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
 
 
