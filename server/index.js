@@ -36,8 +36,10 @@ app.get("/", (req, res) => {
 
 // Retrieve a list of tasks
 app.get("/task", async (req, res) => {
+  const { author } = req.query;
+  console.log("request by: ", author);
   try {
-    const documents = await getDocumentList();
+    const documents = await getDocumentList(author);
     res.status(200).json(documents);
   } catch (error) {
     console.error("Error fetching documents:", error);

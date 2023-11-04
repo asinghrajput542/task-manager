@@ -14,6 +14,10 @@ const schema = mongoose.Schema({
     type: Object,
     required: true,
   },
+  author: {
+    type: Object,
+    required: true,
+  },
   status: {
     type: String,
     enum: ["To Do", "In Progress", "Done"],

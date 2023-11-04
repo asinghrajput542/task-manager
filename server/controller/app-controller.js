@@ -24,11 +24,12 @@ export const updateDocumentById = async (id, newData) => {
 };
 
 // Retrieve a list of documents
-export const getDocumentList = async () => {
+export const getDocumentList = async (author) => {
   try {
-    console.log("Retrieving document list");
+    console.log("Retrieving document list by ,", author);
+    const filter = { author: author };
 
-    return await Document.find()
+    return await Document.find(filter)
       .sort({ modificationDate: -1 }) // Sort documents by modification date in descending order
       .select("_id modificationDate creationDate title description status");
   } catch (error) {

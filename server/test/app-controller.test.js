@@ -33,13 +33,15 @@ describe("API Tests", function () {
           _id: "1",
           title: "Task 1",
           description: "Description 1",
-          status: "Incomplete",
+          status: "Done",
+          author: "admin@gmail.com",
         },
         {
           _id: "2",
           title: "Task 2",
           description: "Description 2",
-          status: "Complete",
+          status: "Done",
+          author: "admin@gmail.com",
         },
       ];
 
@@ -70,6 +72,7 @@ describe("API Tests", function () {
         title: "New Task",
         description: "Description of the new task",
         status: "In Progress",
+        author: "admin@gmail.com",
       };
 
       createStub.resolves(newTask);
@@ -114,6 +117,7 @@ describe("API Tests", function () {
         description: "Description of the new task",
         status: "In Progress",
         _id: "1",
+        author: "admin@gmail.com",
       };
 
       createStub.resolves(newTask);
